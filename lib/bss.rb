@@ -1,4 +1,5 @@
 require "bss/version"
+require "rest-client"
 
 module BSS
   class BSS

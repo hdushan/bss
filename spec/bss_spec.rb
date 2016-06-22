@@ -6,7 +6,7 @@ describe BSS do
   end
 
   it 'responds to get_initialized_sim' do
-    expect(BSS::BSS.new.respond_to?(:get_initialized_sim)).to be true
+    expect(BSS::BSS.new("test").respond_to?(:get_initialized_sim)).to be true
   end
 
 end
