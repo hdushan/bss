@@ -18,7 +18,7 @@ And then execute:
 ```ruby
 require 'bsswizard'
 
-temp_bss = BSSWizard::BSS.new("prod")
+temp_bss = BSSWizard::BSS.new("prod") #As long as the string contains 'prod' (case insensitive), it'll point to production, else will point to battlefield
 sim = temp_bss.get_initialized_sim("9999105952506") #In Prod, the sim returned will be likely different from what you pass in
 ```
 
