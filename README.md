@@ -19,7 +19,7 @@ And then execute:
 require 'bsswizard'
 
 temp_bss = BSSWizard::BSS.new("prod")
-puts temp_bss.get_initialized_sim("9999105952506")
+sim = temp_bss.get_initialized_sim("9999105952506") #In Prod, the sim returned will be likely different from what you pass in
 ```
 
 
