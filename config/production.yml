@@ -1,0 +1,1 @@
+tds_url: 'http://10.0.20.200:56788/get_sim?env=prod_db&quantity=1&reserved_by=TestAuto&sim_type=fake'

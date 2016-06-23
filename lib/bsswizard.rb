@@ -1,22 +1,24 @@
 require "bsswizard/version"
 require "rest-client"
+require_relative 'settings'
 
 module BSSWizard
   class BSS
 
-  	def initialize(testconfig)
-  		@testconfig = testconfig
+  	def initialize(env)
+  		@env = env
+  		Settings.setup(environment)
   	end
 
     def get_initialized_sim(sim_number)
-      if @testconfig.respond_to? :sim_reset_url
+      if environment != "production"
         puts "Initializing SIM #{sim_number}"
         beginning_time = Time.now
-        response = RestClient.get @testconfig.sim_reset_url + sim_number
+        response = RestClient.get Settings.sim_reset_url + sim_number
         puts "Initialized SIM in #{(Time.now-beginning_time).round} seconds. HTTP response code: #{response.code}"
         sim_number
       else
-        puts "Cannot initialize SIM in this environment. Retreiving from TDS instead"
+        puts "Cannot initialize SIM in PROD. Retreiving from TDS instead"
         get_sim_from_tds
       end
     end
@@ -28,7 +30,11 @@ module BSSWizard
     end
 
     def tds
-      "http://10.0.20.200:56788/get_sim?env=prod_db&quantity=1&reserved_by=TestAuto&sim_type=fake"
+      Settings.tds_url
+    end
+
+    def environment
+  	  @env.match(/prod/i)?'production':'battlefield'
     end
 
   end
