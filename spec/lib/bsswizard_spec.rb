@@ -33,22 +33,25 @@ describe BSSWizard::BSS do
   end
 
   describe "get_initialized_sim with stubbed bss" do
-    before do
-      WebMock.disable_net_connect!(allow: 'ecapi-staging.amaysim.net')
-      stub_request(:get, "http://10.0.20.200:56788/get_sim?env=prod_db&quantity=1&reserved_by=TestAuto&sim_type=fake").to_return(body: "12345")
-      stub_request(:get, "https://ecapi-staging.amaysim.net/ecgateway/_testing/bolt_testharness/boltharness.cfc?method=initialiseSim&sim=9999105952506")
-    end
-
     after do
       WebMock.allow_net_connect!
     end
 
     let(:original_sim_number) {"9999105952506"}
+
     it 'returns initialized sim with same number on stubbed battlefield' do
+      battlefield_yaml = {sim_reset_url: 'http://sim_reset_url/'}
+      allow(YAML).to receive(:load_file).and_return(battlefield_yaml)
+      stub_request(:get, "http://sim_reset_url/#{original_sim_number}")
+
       expect(BSSWizard::BSS.new("battlefield").get_initialized_sim(original_sim_number)).to eq original_sim_number
     end
 
     it 'returns different sim on stubbed production' do
+      production_yaml = {tds_url: 'https://tds_url/'}
+      allow(YAML).to receive(:load_file).and_return(production_yaml)
+      stub_request(:get, "https://tds_url/").to_return(body: "12345")
+
       expect(BSSWizard::BSS.new("production").get_initialized_sim(original_sim_number)).not_to eq original_sim_number
     end
   end
