@@ -20,7 +20,7 @@ module BSSWizard
 
     def get_sim_from_initializer(sim)
       beginning_time = Time.now
-      response = RestClient.get Settings.sim_reset_url + sim
+      response = RestClient.get reset(sim)
       puts "Initialized SIM #{sim} in #{(Time.now-beginning_time).round} seconds. HTTP response code: #{response.code}"
       sim
     end
@@ -34,6 +34,10 @@ module BSSWizard
 
     def tds
       Settings.tds_url
+    end
+
+    def reset(sim)
+      Settings.sim_reset_url + sim
     end
 
     def environment
