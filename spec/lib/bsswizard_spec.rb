@@ -1,9 +1,6 @@
 require 'spec_helper'
 
 describe BSSWizard::BSS do
-  it 'has a version number' do
-    expect(BSSWizard::VERSION).not_to be nil
-  end
 
   it 'responds to get_initialized_sim' do
     expect(BSSWizard::BSS.new("test").respond_to?(:get_initialized_sim)).to be true
@@ -35,13 +32,23 @@ describe BSSWizard::BSS do
     end
   end
 
-  describe "get_initialized_sim" do
-  	let(:original_sim_number) {"9999105952506"}
-  	it 'returns initialized sim with same number on battlefield' do
+  describe "get_initialized_sim with stubbed bss" do
+    before do
+      WebMock.disable_net_connect!(allow: 'ecapi-staging.amaysim.net')
+      stub_request(:get, "http://10.0.20.200:56788/get_sim?env=prod_db&quantity=1&reserved_by=TestAuto&sim_type=fake").to_return(body: "12345")
+      stub_request(:get, "https://ecapi-staging.amaysim.net/ecgateway/_testing/bolt_testharness/boltharness.cfc?method=initialiseSim&sim=9999105952506")
+    end
+
+    after do
+      WebMock.allow_net_connect!
+    end
+
+    let(:original_sim_number) {"9999105952506"}
+    it 'returns initialized sim with same number on stubbed battlefield' do
       expect(BSSWizard::BSS.new("battlefield").get_initialized_sim(original_sim_number)).to eq original_sim_number
     end
 
-    it 'returns different sim on production' do
+    it 'returns different sim on stubbed production' do
       expect(BSSWizard::BSS.new("production").get_initialized_sim(original_sim_number)).not_to eq original_sim_number
     end
   end
