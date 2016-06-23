@@ -33,9 +33,6 @@ describe BSSWizard::BSS do
   end
 
   describe "get_initialized_sim with stubbed bss" do
-    after do
-      WebMock.allow_net_connect!
-    end
 
     let(:original_sim_number) {"9999105952506"}
 
