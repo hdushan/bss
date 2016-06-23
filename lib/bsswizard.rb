@@ -12,20 +12,23 @@ module BSSWizard
 
     def get_initialized_sim(sim_number)
       if environment != "production"
-        puts "Initializing SIM #{sim_number}"
-        beginning_time = Time.now
-        response = RestClient.get Settings.sim_reset_url + sim_number
-        puts "Initialized SIM in #{(Time.now-beginning_time).round} seconds. HTTP response code: #{response.code}"
-        sim_number
+        get_sim_from_initializer(sim_number)
       else
-        puts "Cannot initialize SIM in PROD. Retreiving from TDS instead"
-        get_sim_from_tds
+        get_new_sim_from_tds
       end
     end
 
-    def get_sim_from_tds
+    def get_sim_from_initializer(sim)
+      beginning_time = Time.now
+      response = RestClient.get Settings.sim_reset_url + sim
+      puts "Initialized SIM #{sim} in #{(Time.now-beginning_time).round} seconds. HTTP response code: #{response.code}"
+      sim
+    end
+
+    def get_new_sim_from_tds
+      beginning_time = Time.now
       response = RestClient.get tds
-      puts "SIM aquired from TDS: #{response.body}"
+      puts "SIM aquired from TDS: #{response.body} in #{(Time.now-beginning_time).round} seconds. HTTP response code: #{response.code}"
       response.body
     end
 
