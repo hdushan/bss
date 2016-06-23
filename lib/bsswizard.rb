@@ -1,7 +1,7 @@
-require "bss/version"
+require "bsswizard/version"
 require "rest-client"
 
-module BSS
+module BSSWizard
   class BSS
 
   	def initialize(testconfig)
