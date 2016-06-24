@@ -32,3 +32,9 @@ sim = bss.get_initialized_sim("9999105952506") #In Prod, the sim returned will b
 #### To run tests
 
     $ bundle exec rake
+Unit test coverage report gets generted in `coverage`
+
+#### To check code practices
+
+    $ bundle exec rubocop
+
